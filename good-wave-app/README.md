@@ -4,10 +4,13 @@ Une application iOS moderne pour les surfeurs, permettant de découvrir et suivr
 
 ## Fonctionnalités
 
-- 📍 Découverte de spots de surf
-- 🌟 Système de notation de difficulté
+- 📍 Découverte de spots de surf avec pagination
+- 🌟 Système de notation de difficulté (1 à 5 étoiles)
 - 📅 Suivi des saisons optimales
-- 🔍 Recherche de spots par localisation
+- 🔍 Recherche de spots par localisation ou nom
+- 🗺️ Carte mondiale interactive avec géolocalisation
+- ❤️ Système de favoris pour sauvegarder vos spots préférés
+- 🌤️ Météo en temps réel pour chaque spot
 - 📱 Interface utilisateur intuitive et moderne
 
 ## Prérequis
@@ -15,6 +18,7 @@ Une application iOS moderne pour les surfeurs, permettant de découvrir et suivr
 - iOS 15.0+
 - Xcode 13.0+
 - Swift 5.5+
+- Backend Laravel en cours d'exécution sur `http://127.0.0.1:8000`
 
 ## Installation
 
@@ -23,15 +27,15 @@ Une application iOS moderne pour les surfeurs, permettant de découvrir et suivr
 git clone https://github.com/votre-username/good-wave-app.git
 ```
 
-2. Installez les dépendances :
-```bash
-cd good-wave-app
-pod install
-```
+2. Ouvrez le fichier `good-wave.xcodeproj` dans Xcode
 
-3. Ouvrez le fichier `good-wave.xcworkspace` dans Xcode
+3. Configurez vos clés API :
+   - Copiez `Config.xcconfig.example` vers `Config.xcconfig`
+   - Remplissez vos clés API :
+     - `API_KEY` : Clé API pour le backend Laravel
+     - `WEATHER_API_KEY` : Clé API pour WeatherAPI (https://www.weatherapi.com/)
 
-4. Configurez votre fichier `Config.xcconfig` avec vos clés API si nécessaire
+4. Assurez-vous que le backend Laravel est en cours d'exécution sur `http://127.0.0.1:8000`
 
 5. Compilez et exécutez l'application
 
@@ -48,21 +52,49 @@ L'application suit une architecture MVVM (Model-View-ViewModel) :
 
 ```
 good-wave-app/
-├── Models/          # Modèles de données
-├── Views/           # Vues SwiftUI
-├── ViewModels/      # ViewModels
-├── App/            # Configuration de l'app
-├── Assets/         # Ressources graphiques
-└── Tests/          # Tests unitaires et UI
+├── Models/              # Modèles de données (SurfSpot, PaginatedResponse)
+├── views/               # Vues SwiftUI
+│   ├── components/      # Composants réutilisables
+│   ├── ContentView.swift    # Vue de détail d'un spot
+│   ├── ListView.swift       # Vue principale avec liste des spots
+│   ├── WorldMapView.swift   # Carte mondiale interactive
+│   ├── SavedView.swift      # Vue des favoris
+│   └── ProfileView.swift   # Vue de profil
+├── viewModels/          # ViewModels (SurfSpotViewModel)
+├── app/                 # Configuration de l'app
+│   └── Services/        # Services API (SurfSpotAPIService, SurfSpotSaveService)
+├── assets/              # Ressources graphiques
+├── Config.xcconfig      # Configuration API (non versionné)
+├── Config.xcconfig.example  # Template de configuration
+└── Tests/               # Tests unitaires et UI
 ```
 
 ## Licence
 
 Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 
+## Configuration API
+
+L'application nécessite deux clés API :
+
+1. **API_KEY** : Clé d'authentification pour le backend Laravel
+2. **WEATHER_API_KEY** : Clé pour l'API WeatherAPI (météo en temps réel)
+
+Ces clés doivent être configurées dans `Config.xcconfig` (voir `Config.xcconfig.example` pour le format).
+
+⚠️ **Important** : Le fichier `Config.xcconfig` est dans `.gitignore` et ne sera pas commité sur GitHub.
+
+## Backend
+
+L'application se connecte à un backend Laravel qui doit être en cours d'exécution sur `http://127.0.0.1:8000`.
+
+Les endpoints utilisés :
+- `GET /spots` : Liste paginée des spots de surf
+- `GET /spots/{id}` : Détails d'un spot
+- `GET /favorites` : Liste des favoris de l'utilisateur
+- `POST /favorites` : Ajouter/retirer un favori
+
 ## Développeurs
 
-Alexandra Adeikalam
-Théo Butz
+- Théo Butz
 
-Lien du projet : [https://github.com/votre-username/good-wave-app](https://github.com/votre-username/good-wave-app)
